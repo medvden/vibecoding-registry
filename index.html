@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Реестр проектов вайбкодинга</title>
+<style>
+  :root {
+    --bg: #f8f9fb;
+    --card: #ffffff;
+    --border: #e2e5eb;
+    --text: #1a1d27;
+    --muted: #6b7280;
+    --accent: #6366f1;
+    --accent-light: #eef2ff;
+    --green: #16a34a;
+    --green-bg: #f0fdf4;
+    --yellow: #ca8a04;
+    --yellow-bg: #fefce8;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --blue: #2563eb;
+    --blue-bg: #eff6ff;
+    --purple: #9333ea;
+    --purple-bg: #faf5ff;
+    --muted-bg: #f3f4f6;
+    --hover: #f1f5f9;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 32px;
+    min-height: 100vh;
+  }
+  .header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 4px;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+  }
+  .timestamp {
+    font-size: 13px;
+    color: var(--muted);
+    background: var(--muted-bg);
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    min-width: 140px;
+    flex: 1;
+    box-shadow: var(--shadow);
+  }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+    box-shadow: var(--shadow);
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .table-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  thead th {
+    background: var(--accent-light);
+    text-align: left;
+    padding: 12px 14px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  thead th:hover { color: var(--accent); }
+  thead th.sorted { color: var(--accent); }
+  thead th.sorted::after { content: ' \u25B2'; font-size: 10px; }
+  thead th.sorted.desc::after { content: ' \u25BC'; }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--hover); }
+  td { padding: 12px 14px; vertical-align: middle; }
+
+  .project-name {
+    font-weight: 600;
+    color: var(--text);
+    display: block;
+  }
+  .project-type {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .badge-green { background: var(--green-bg); color: var(--green); }
+  .badge-yellow { background: var(--yellow-bg); color: var(--yellow); }
+  .badge-red { background: var(--red-bg); color: var(--red); }
+  .badge-blue { background: var(--blue-bg); color: var(--blue); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple); }
+  .badge-muted { background: var(--muted-bg); color: var(--muted); }
+
+  .server-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+  }
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot-green { background: var(--green); box-shadow: 0 0 6px rgba(22,163,74,0.4); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-muted { background: #c9cdd5; }
+
+  a {
+    color: var(--blue);
+    text-decoration: none;
+    font-size: 13px;
+  }
+  a:hover { text-decoration: underline; }
+  .no-link { color: var(--muted); font-size: 13px; }
+
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .tech-tag {
+    background: var(--muted-bg);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .dates { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .date-recent { color: var(--green); font-weight: 600; }
+  .time-ago {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  @media (max-width: 1100px) {
+    body { padding: 16px; }
+    .table-wrap { overflow-x: auto; }
+    table { min-width: 1000px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Реестр проектов вайбкодинга</h1>
+  <span class="timestamp" id="timestamp"></span>
+</div>
+<p class="subtitle">Denis Vibecoding &mdash; все проекты</p>
+
+<div class="stats" id="stats"></div>
+<div class="filters" id="filters"></div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th data-col="name">Проект</th>
+        <th data-col="stack">Стек</th>
+        <th data-col="created">Создан</th>
+        <th data-col="modified" class="sorted desc">Посл. изм.</th>
+        <th data-col="devStatus">Статус</th>
+        <th data-col="deployStatus">Внедрение</th>
+        <th data-col="github">GitHub</th>
+        <th data-col="server">Сервер</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<script>
+const TODAY = new Date('2026-04-12');
+
+const projects = [
+  {
+    name: "mtk-radar",
+    type: "Веб-приложение",
+    stack: ["React","FastAPI","Supabase","Celery","Redis"],
+    created: "2026-03-15",
+    modified: "2026-03-18",
+    devStatus: "MVP в разработке",
+    devCategory: "dev",
+    deployStatus: "Не задеплоен",
+    deployCategory: "none",
+    github: "alxrmmv/mtk-radar",
+    server: "local",
+    serverLabel: "Локально"
+  },
+  {
+    name: "MTK Radar Cursor",
+    type: "Веб-приложение",
+    stack: ["Next.js 16","React 19","Tailwind"],
+    created: "2026-03-15",
+    modified: "2026-03-17",
+    devStatus: "Заброшен",
+    devCategory: "abandoned",
+    deployStatus: "Не внедрён",
+    deployCategory: "none",
+    github: null,
+    server: "local",
+    serverLabel: "Локально"
+  },
+  {
+    name: "MTK Consulting Unit Economics",
+    type: "Финмодели",
+    stack: ["Excel"],
+    created: "2026-03-15",
+    modified: "2026-03-15",
+    devStatus: "Готов",
+    devCategory: "ready",
+    deployStatus: "Используется",
+    deployCategory: "deployed",
+    github: null,
+    server: "local",
+    serverLabel: "Локально"
+  },
+  {
+    name: "MTK Application Expert",
+    type: "Claude Code skill",
+    stack: ["Markdown"],
+    created: "2026-03-17",
+    modified: "2026-03-17",
+    devStatus: "Готов",
+    devCategory: "ready",
+    deployStatus: "В Claude Code",
+    deployCategory: "deployed",
+    github: null,
+    server: "local",
+    serverLabel: "Локально (skill)"
+  },
+  {
+    name: "MTK Marketing",
+    type: "Контент",
+    stack: ["Markdown","YAML"],
+    created: "2026-03-19",
+    modified: "2026-04-11",
+    devStatus: "В работе",
+    devCategory: "dev",
+    deployStatus: "Хранилище",
+    deployCategory: "partial",
+    github: null,
+    server: "local",
+    serverLabel: "Локально"
+  },
+  {
+    name: "MTK Backoffice",
+    type: "—",
+    stack: [],
+    created: "2026-03-20",
+    modified: "2026-03-22",
+    devStatus: "Пустой",
+    devCategory: "abandoned",
+    deployStatus: "Не начат",
+    deployCategory: "none",
+    github: null,
+    server: null,
+    serverLabel: "—"
+  },
+  {
+    name: "FASIE Application Expert",
+    type: "Claude Code skill",
+    stack: ["Markdown"],
+    created: "2026-03-24",
+    modified: "2026-03-24",
+    devStatus: "Готов",
+    devCategory: "ready",
+    deployStatus: "В Claude Code",
+    deployCategory: "deployed",
+    github: null,
+    server: "local",
+    serverLabel: "Локально (skill)"
+  },
+  {
+    name: "FASIE Presentation Pipeline",
+    type: "CLI-утилита",
+    stack: ["Python","Claude API","pdfplumber"],
+    created: "2026-03-30",
+    modified: "2026-04-10",
+    devStatus: "В разработке",
+    devCategory: "dev",
+    deployStatus: "Локально",
+    deployCategory: "partial",
+    github: "medvden/fasie-presentation-pipeline",
+    server: "local",
+    serverLabel: "Локально"
+  },
+  {
+    name: "ИННОМА",
+    type: "Документация",
+    stack: ["DOCX","Excel"],
+    created: "2026-04-02",
+    modified: "2026-04-02",
+    devStatus: "Архив",
+    devCategory: "archive",
+    deployStatus: "Документы готовы",
+    deployCategory: "deployed",
+    github: null,
+    server: null,
+    serverLabel: "—"
+  },
+  {
+    name: "РФРИТ",
+    type: "Документация",
+    stack: ["PDF","PPTX","Markdown"],
+    created: "2026-04-03",
+    modified: "2026-04-07",
+    devStatus: "Архив",
+    devCategory: "archive",
+    deployStatus: "Заявка подана",
+    deployCategory: "deployed",
+    github: null,
+    server: null,
+    serverLabel: "—"
+  },
+  {
+    name: "Memory Palace",
+    type: "Python-пакет / MCP",
+    stack: ["Python","ChromaDB","SQLite"],
+    created: "2026-04-07",
+    modified: "2026-04-11",
+    devStatus: "Production-ready",
+    devCategory: "ready",
+    deployStatus: "pip install",
+    deployCategory: "deployed",
+    github: "milla-jovovich/mempalace",
+    server: "local",
+    serverLabel: "Локально"
+  },
+  {
+    name: "mtk-tools",
+    type: "HTML-приложения",
+    stack: ["HTML","JS","pdfmake","Docker"],
+    created: "2026-04-09",
+    modified: "2026-04-11",
+    devStatus: "kp-builder в разработке",
+    devCategory: "dev",
+    deployStatus: "Задеплоен",
+    deployCategory: "deployed",
+    github: "medvden/mtk-tools",
+    server: "vps",
+    serverLabel: "VPS 153.80.247.211"
+  },
+  {
+    name: "mtk-smm-bot",
+    type: "Telegram-бот",
+    stack: ["Python","Telegram Bot","OpenRouter","MemPalace"],
+    created: "2026-04-11",
+    modified: "2026-04-12",
+    devStatus: "Phase 5 (hotfixes)",
+    devCategory: "dev",
+    deployStatus: "Задеплоен",
+    deployCategory: "deployed",
+    github: "medvden/mtk-smm-bot",
+    server: "vps",
+    serverLabel: "VPS 153.80.247.211"
+  }
+];
+
+// Sort by modified desc initially
+projects.sort((a, b) => b.modified.localeCompare(a.modified));
+
+// Timestamp
+function updateTimestamp() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  document.getElementById('timestamp').textContent =
+    `${pad(now.getDate())}.${pad(now.getMonth()+1)}.${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+}
+updateTimestamp();
+
+// Stats
+const total = projects.length;
+const onVps = projects.filter(p => p.server === 'vps').length;
+const withGh = projects.filter(p => p.github).length;
+const production = projects.filter(p => ['ready'].includes(p.devCategory) || p.deployCategory === 'deployed').length;
+const inDev = projects.filter(p => p.devCategory === 'dev').length;
+
+document.getElementById('stats').innerHTML = `
+  <div class="stat"><div class="stat-value">${total}</div><div class="stat-label">Всего</div></div>
+  <div class="stat"><div class="stat-value" style="color:var(--green)">${production}</div><div class="stat-label">Production / Внедрено</div></div>
+  <div class="stat"><div class="stat-value" style="color:var(--yellow)">${inDev}</div><div class="stat-label">В разработке</div></div>
+  <div class="stat"><div class="stat-value" style="color:var(--blue)">${withGh}</div><div class="stat-label">На GitHub</div></div>
+  <div class="stat"><div class="stat-value" style="color:var(--purple)">${onVps}</div><div class="stat-label">На VPS</div></div>
+`;
+
+// Filters
+const categories = [
+  { key: 'all', label: 'Все' },
+  { key: 'dev', label: 'В разработке' },
+  { key: 'ready', label: 'Готовы' },
+  { key: 'archive', label: 'Архив' },
+  { key: 'abandoned', label: 'Заброшены' },
+  { key: 'vps', label: 'На VPS' },
+];
+let activeFilter = 'all';
+
+function renderFilters() {
+  document.getElementById('filters').innerHTML = categories.map(c =>
+    `<button class="filter-btn ${activeFilter===c.key?'active':''}" onclick="setFilter('${c.key}')">${c.label}</button>`
+  ).join('');
+}
+
+function setFilter(key) {
+  activeFilter = key;
+  renderFilters();
+  renderTable();
+}
+
+function getFiltered() {
+  if (activeFilter === 'all') return projects;
+  if (activeFilter === 'vps') return projects.filter(p => p.server === 'vps');
+  return projects.filter(p => p.devCategory === activeFilter);
+}
+
+function devBadge(p) {
+  const map = { ready: 'badge-green', dev: 'badge-yellow', abandoned: 'badge-red', archive: 'badge-muted' };
+  return `<span class="badge ${map[p.devCategory] || 'badge-muted'}">${p.devStatus}</span>`;
+}
+
+function deployBadge(p) {
+  const map = { deployed: 'badge-green', partial: 'badge-blue', none: 'badge-muted' };
+  return `<span class="badge ${map[p.deployCategory] || 'badge-muted'}">${p.deployStatus}</span>`;
+}
+
+function serverCell(p) {
+  if (!p.server) return `<span class="no-link">—</span>`;
+  if (p.server === 'vps') return `<span class="server-badge"><span class="dot dot-green"></span>${p.serverLabel}</span>`;
+  return `<span class="server-badge"><span class="dot dot-muted"></span>${p.serverLabel}</span>`;
+}
+
+function fmtDate(d) {
+  const parts = d.split('-');
+  return `${parts[2]}.${parts[1]}`;
+}
+
+function timeAgo(d) {
+  const diff = Math.floor((TODAY - new Date(d)) / 86400000);
+  if (diff === 0) return 'сегодня';
+  if (diff === 1) return 'вчера';
+  if (diff < 7) return `${diff} дн. назад`;
+  const weeks = Math.floor(diff / 7);
+  if (weeks === 1) return '1 нед. назад';
+  if (weeks < 5) return `${weeks} нед. назад`;
+  const months = Math.floor(diff / 30);
+  return `${months} мес. назад`;
+}
+
+function isRecent(d) {
+  const diff = (TODAY - new Date(d)) / 86400000;
+  return diff <= 7;
+}
+
+function renderTable() {
+  const list = getFiltered();
+  document.getElementById('tbody').innerHTML = list.map(p => `
+    <tr>
+      <td>
+        <span class="project-name">${p.name}</span>
+        <span class="project-type">${p.type}</span>
+      </td>
+      <td><div class="tech-tags">${p.stack.map(s => `<span class="tech-tag">${s}</span>`).join('')}</div></td>
+      <td class="dates">${fmtDate(p.created)}</td>
+      <td class="dates ${isRecent(p.modified)?'date-recent':''}">
+        ${fmtDate(p.modified)}
+        <span class="time-ago">${timeAgo(p.modified)}</span>
+      </td>
+      <td>${devBadge(p)}</td>
+      <td>${deployBadge(p)}</td>
+      <td>${p.github ? `<a href="https://github.com/${p.github}" target="_blank">${p.github}</a>` : '<span class="no-link">—</span>'}</td>
+      <td>${serverCell(p)}</td>
+    </tr>
+  `).join('');
+}
+
+// Sorting
+let sortCol = 'modified', sortAsc = false;
+document.querySelectorAll('thead th').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) sortAsc = !sortAsc;
+    else { sortCol = col; sortAsc = true; }
+    document.querySelectorAll('thead th').forEach(h => h.classList.remove('sorted','desc'));
+    th.classList.add('sorted');
+    if (!sortAsc) th.classList.add('desc');
+    projects.sort((a, b) => {
+      let va = a[col] || '', vb = b[col] || '';
+      if (typeof va === 'object') va = va.join(',');
+      if (typeof vb === 'object') vb = vb.join(',');
+      return sortAsc ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+    });
+    renderTable();
+  });
+});
+
+renderFilters();
+renderTable();
+</script>
+</body>
+</html>
