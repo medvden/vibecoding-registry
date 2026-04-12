@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Реестр проектов вайбкодинга</title>
 <style>
+  .lock-screen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: #f8f9fb;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  }
+  .lock-screen.hidden { display: none; }
+  .lock-title { font-size: 20px; font-weight: 600; color: #1a1d27; }
+  .lock-input {
+    padding: 10px 16px; border: 1px solid #e2e5eb; border-radius: 8px;
+    font-size: 15px; width: 240px; outline: none; text-align: center;
+  }
+  .lock-input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+  .lock-input.error { border-color: #dc2626; animation: shake 0.3s; }
+  @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  .lock-hint { font-size: 12px; color: #6b7280; }
   :root {
     --bg: #f8f9fb;
     --card: #ffffff;
@@ -220,6 +237,13 @@
 </head>
 <body>
 
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-title">Реестр проектов</div>
+  <input class="lock-input" id="lockInput" type="password" placeholder="Пароль" autofocus>
+  <div class="lock-hint">Только для своих</div>
+</div>
+
+<div id="appContent" style="display:none">
 <div class="header">
   <h1>Реестр проектов вайбкодинга</h1>
   <span class="timestamp" id="timestamp"></span>
@@ -245,8 +269,38 @@
     <tbody id="tbody"></tbody>
   </table>
 </div>
+</div>
 
 <script>
+// Lock screen
+const PASS_HASH = '6d9ac0eee0f0fae08ad03ad9403990bca21b7eeec1290b7b22f59915f5101eac';
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
+}
+const lockInput = document.getElementById('lockInput');
+const lockScreen = document.getElementById('lockScreen');
+const appContent = document.getElementById('appContent');
+
+if (sessionStorage.getItem('registry_unlocked') === '1') {
+  lockScreen.classList.add('hidden');
+  appContent.style.display = '';
+}
+
+lockInput.addEventListener('keydown', async (e) => {
+  if (e.key !== 'Enter') return;
+  const hash = await sha256(lockInput.value);
+  if (hash === PASS_HASH) {
+    sessionStorage.setItem('registry_unlocked', '1');
+    lockScreen.classList.add('hidden');
+    appContent.style.display = '';
+  } else {
+    lockInput.classList.add('error');
+    lockInput.value = '';
+    setTimeout(() => lockInput.classList.remove('error'), 400);
+  }
+});
+
 const TODAY = new Date('2026-04-12');
 
 const projects = [
