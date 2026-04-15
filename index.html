@@ -301,7 +301,7 @@ lockInput.addEventListener('keydown', async (e) => {
   }
 });
 
-const TODAY = new Date('2026-04-12');
+const TODAY = new Date('2026-04-15');
 
 const projects = [
   {
@@ -365,7 +365,7 @@ const projects = [
     type: "Контент",
     stack: ["Markdown","YAML"],
     created: "2026-03-19",
-    modified: "2026-04-11",
+    modified: "2026-04-13",
     devStatus: "В работе",
     devCategory: "dev",
     deployStatus: "Хранилище",
@@ -407,7 +407,7 @@ const projects = [
     type: "CLI-утилита",
     stack: ["Python","Claude API","pdfplumber"],
     created: "2026-03-30",
-    modified: "2026-04-10",
+    modified: "2026-04-12",
     devStatus: "В разработке",
     devCategory: "dev",
     deployStatus: "Локально",
@@ -435,7 +435,7 @@ const projects = [
     type: "HTML-приложения",
     stack: ["HTML","JS","pdfmake","Docker"],
     created: "2026-04-09",
-    modified: "2026-04-11",
+    modified: "2026-04-15",
     devStatus: "kp-builder в разработке",
     devCategory: "dev",
     deployStatus: "Задеплоен",
@@ -449,7 +449,7 @@ const projects = [
     type: "Telegram-бот",
     stack: ["Python","Telegram Bot","OpenRouter","MemPalace"],
     created: "2026-04-11",
-    modified: "2026-04-12",
+    modified: "2026-04-15",
     devStatus: "Phase 5 (hotfixes)",
     devCategory: "dev",
     deployStatus: "Задеплоен",
@@ -463,14 +463,28 @@ const projects = [
     type: "Дневник / Knowledge Graph",
     stack: ["Markdown","PDF"],
     created: "2026-04-12",
-    modified: "2026-04-12",
+    modified: "2026-04-13",
     devStatus: "В работе",
     devCategory: "dev",
     deployStatus: "Локально",
     deployCategory: "partial",
-    github: null,
+    github: "medvden/migraine-diary",
     server: "local",
     serverLabel: "Локально"
+  },
+  {
+    name: "Sk Application Expert",
+    type: "Claude Code skill",
+    stack: ["Markdown"],
+    created: "2026-04-14",
+    modified: "2026-04-14",
+    devStatus: "В разработке",
+    devCategory: "dev",
+    deployStatus: "В Claude Code",
+    deployCategory: "partial",
+    github: null,
+    server: "local",
+    serverLabel: "Локально (skill)"
   }
 ];
 
