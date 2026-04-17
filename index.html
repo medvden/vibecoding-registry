@@ -282,7 +282,7 @@ const lockInput = document.getElementById('lockInput');
 const lockScreen = document.getElementById('lockScreen');
 const appContent = document.getElementById('appContent');
 
-if (sessionStorage.getItem('registry_unlocked') === '1') {
+if (localStorage.getItem('registry_unlocked') === '1') {
   lockScreen.classList.add('hidden');
   appContent.style.display = '';
 }
@@ -291,7 +291,7 @@ lockInput.addEventListener('keydown', async (e) => {
   if (e.key !== 'Enter') return;
   const hash = await sha256(lockInput.value);
   if (hash === PASS_HASH) {
-    sessionStorage.setItem('registry_unlocked', '1');
+    localStorage.setItem('registry_unlocked', '1');
     lockScreen.classList.add('hidden');
     appContent.style.display = '';
   } else {
