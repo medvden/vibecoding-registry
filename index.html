@@ -301,7 +301,7 @@ lockInput.addEventListener('keydown', async (e) => {
   }
 });
 
-const TODAY = new Date('2026-04-21');
+const TODAY = new Date('2026-04-23');
 
 const projects = [
   {
@@ -309,7 +309,7 @@ const projects = [
     type: "Веб-приложение",
     stack: ["React","FastAPI","Supabase","Celery","Redis"],
     created: "2026-03-15",
-    modified: "2026-04-15",
+    modified: "2026-04-22",
     devStatus: "Активная разработка",
     devCategory: "dev",
     deployStatus: "Задеплоен",
@@ -365,7 +365,7 @@ const projects = [
     type: "Контент",
     stack: ["Markdown","YAML"],
     created: "2026-03-19",
-    modified: "2026-04-15",
+    modified: "2026-04-22",
     devStatus: "В работе",
     devCategory: "dev",
     deployStatus: "Хранилище",
@@ -435,7 +435,7 @@ const projects = [
     type: "HTML-приложения",
     stack: ["HTML","JS","pdfmake","Docker"],
     created: "2026-04-09",
-    modified: "2026-04-19",
+    modified: "2026-04-22",
     devStatus: "kp-builder в разработке",
     devCategory: "dev",
     deployStatus: "Задеплоен",
@@ -477,7 +477,7 @@ const projects = [
     type: "Outreach / автоматизация",
     stack: ["Python","Claude API","Supabase","Coldy.ai"],
     created: "2026-04-17",
-    modified: "2026-04-19",
+    modified: "2026-04-23",
     devStatus: "В разработке",
     devCategory: "dev",
     deployStatus: "Локально",
@@ -501,12 +501,54 @@ const projects = [
     serverLabel: "Локально (skill)"
   },
   {
-    name: "mtk-site-poc",
-    type: "POC / Лендинги",
-    stack: ["HTML","Tilda"],
+    name: "mtk-site",
+    type: "Лендинг / Сайт",
+    stack: ["Astro","TypeScript"],
     created: "2026-04-20",
     modified: "2026-04-20",
-    devStatus: "POC",
+    devStatus: "В разработке",
+    devCategory: "dev",
+    deployStatus: "Локально",
+    deployCategory: "partial",
+    github: null,
+    server: "local",
+    serverLabel: "Локально"
+  },
+  {
+    name: "fastfounder-scraper",
+    type: "Скрейпер / Python",
+    stack: ["Python"],
+    created: "2026-04-20",
+    modified: "2026-04-20",
+    devStatus: "В разработке",
+    devCategory: "dev",
+    deployStatus: "Локально",
+    deployCategory: "partial",
+    github: null,
+    server: "local",
+    serverLabel: "Локально"
+  },
+  {
+    name: "mtk-radar-parser",
+    type: "Парсер / CLI",
+    stack: ["Python","Docker"],
+    created: "2026-04-22",
+    modified: "2026-04-22",
+    devStatus: "В разработке",
+    devCategory: "dev",
+    deployStatus: "Локально",
+    deployCategory: "partial",
+    github: "alxrmmv/mtk-radar-parser",
+    server: "local",
+    serverLabel: "Локально"
+  },
+  {
+    name: "mtk-seo",
+    type: "SEO-пайплайн",
+    stack: ["Markdown","Claude API","Python"],
+    created: "2026-04-22",
+    modified: "2026-04-22",
+    devStatus: "В разработке",
     devCategory: "dev",
     deployStatus: "Локально",
     deployCategory: "partial",
