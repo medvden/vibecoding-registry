@@ -228,6 +228,12 @@
     font-weight: 400;
   }
 
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 36px 0 16px;
+  }
+
   @media (max-width: 1100px) {
     body { padding: 16px; }
     .table-wrap { overflow-x: auto; }
@@ -267,6 +273,21 @@
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<h2 class="section-title">Домены</h2>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Домен</th>
+        <th>Статус</th>
+        <th>Проект</th>
+        <th>Что размещено</th>
+      </tr>
+    </thead>
+    <tbody id="domainsBody"></tbody>
   </table>
 </div>
 </div>
@@ -752,6 +773,38 @@ document.querySelectorAll('thead th').forEach(th => {
 
 renderFilters();
 renderTable();
+
+// Домены
+const domains = [
+  { host: "mtkconsulting.ru", url: "https://mtkconsulting.ru", status: "Работает", statusCat: "live", project: "mtk-website", desc: "Сайт МТК Консалтинг (прод)" },
+  { host: "cowork.mtkradar.ru", url: "https://cowork.mtkradar.ru", status: "Работает", statusCat: "live", project: "custom-doc-service", desc: "Генератор документов — UI + API (chat, загрузки)" },
+  { host: "measures.mtkradar.ru", url: "https://measures.mtkradar.ru", status: "Работает", statusCat: "live", project: "mtk-radar", desc: "Приложение mtk-radar (backend + frontend)" },
+  { host: "promo.mtkradar.ru", url: "https://promo.mtkradar.ru", status: "Работает", statusCat: "live", project: "mtk-website", desc: "Промо-лендинги грантов (/grants/*)" },
+  { host: "work.mtkradar.ru", url: "https://work.mtkradar.ru", status: "Работает (внешний)", statusCat: "ext", project: "— (внешний сервис)", desc: "Прокси на mymeet.ai — транскрипция встреч" },
+  { host: "mtkradar.ru", url: "https://mtkradar.ru", status: "Редирект", statusCat: "redir", project: "—", desc: "301 → work.mtkradar.ru" },
+  { host: "www.mtkconsulting.ru", url: "https://www.mtkconsulting.ru", status: "Редирект", statusCat: "redir", project: "mtk-website", desc: "301 → mtkconsulting.ru" },
+  { host: "kp.mtkradar.ru", url: null, status: "Настроен, нет DNS", statusCat: "nodns", project: "mtk-tools", desc: "КП-билдер (kp-builder.html)" },
+  { host: "docs.mtkradar.ru", url: null, status: "Настроен, нет DNS", statusCat: "nodns", project: "mtk-tools", desc: "Docs-builder (docs-builder.html)" },
+  { host: "services.mtkradar.ru", url: null, status: "Настроен, нет DNS", statusCat: "nodns", project: "mtk-tools", desc: "Матрица продуктов (product-matrix.html)" },
+  { host: "projects.mtkradar.ru", url: null, status: "Настроен, нет DNS", statusCat: "nodns", project: "mtk-tools", desc: "Проекты (projects.html)" }
+];
+
+function domainStatusBadge(d) {
+  const map = { live: 'badge-green', redir: 'badge-blue', ext: 'badge-purple', nodns: 'badge-yellow' };
+  return `<span class="badge ${map[d.statusCat] || 'badge-muted'}">${d.status}</span>`;
+}
+
+function renderDomains() {
+  document.getElementById('domainsBody').innerHTML = domains.map(d => `
+    <tr>
+      <td>${d.url ? `<a href="${d.url}" target="_blank">${d.host}</a>` : `<span class="project-name">${d.host}</span>`}</td>
+      <td>${domainStatusBadge(d)}</td>
+      <td>${d.project}</td>
+      <td class="project-type">${d.desc}</td>
+    </tr>
+  `).join('');
+}
+renderDomains();
 </script>
 </body>
 </html>
